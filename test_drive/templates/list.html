@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>List</h1>
+
+<div class="col s12">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nombre</th>
+        <th>Tipo</th>
+        <th>Tamaño</th>
+        <th>Usuario Modifica</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in files %}
+      <tr>
+        <td><img src="{{ f['iconLink'] }}" alt="" style="width: 50%;"></td>
+        <td><a href="{{ f['downloadUrl'] }}"></a>{{ f['originalFilename'] }}</td>
+        <td>{{ f['fileExtension'] }}</td>
+        <td>{{ f['fileSize'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
