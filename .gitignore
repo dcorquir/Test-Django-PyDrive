@@ -1,0 +1,6 @@
+demo/__pycache__/
+test_drive/__pycache__/
+test_drive/migrations/__pycache__/
+.idea/
+test/
+db.sqlite3
