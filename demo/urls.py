@@ -19,8 +19,9 @@ from test_drive import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.home, name='home'),
+    url(r'^$', views.list, name='home'),
     url(r'^login/$', views.login, name='login'),
     url(r'^(?P<code>\w+)$', views.loggued, name='loggued'),
     url(r'^list/$', views.list, name='list'),
+    url(r'^create/$', views.create, name='create'),
 ]

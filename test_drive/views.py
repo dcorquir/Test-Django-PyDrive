@@ -32,8 +32,12 @@ def loggued(request, code):
     return redirect('home')
 
 
-def create_file(request):
-    gauth = request.session.get('gauth')
+def create(request):
+    gauth = GoogleAuth()
+    gauth.DEFAULT_SETTINGS[
+        'client_config_file'] = settings.GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE
+    # Creates local webserver and auto handles authentication.
+    gauth.LocalWebserverAuth()
     drive = GoogleDrive(gauth)
     # Create GoogleDriveFile instance with title 'Hello.txt'.
     # 'mimeType' : 'application/vnd.google-apps.folder'
@@ -47,13 +51,13 @@ def create_file(request):
     # 'mimeType' : 'application/vnd.google-apps.spreadsheet' | Google Sheets
 
     file1 = drive.CreateFile({
-        'title': 'Hello2',
-        'mimeType': 'application/vnd.google-apps.folder'
+        'title': request.POST.get('name'),
+        'mimeType': request.POST.get('type')
     })
     # Set content of the file from given string.
-    file1.SetContentString('Hello World!')
     file1.Upload()
-    pprint(file1)
+    messages.warning(request, "Se ha creado el archivo.")
+    return redirect('home')
 
 
 def list(request):
@@ -65,4 +69,5 @@ def list(request):
     drive = GoogleDrive(gauth)
     file_list = drive.ListFile(
         {'q': "'root' in parents and trashed=false"}).GetList()
+    pprint(file_list)
     return render(request, 'list.html', {'files': file_list})

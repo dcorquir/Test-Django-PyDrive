@@ -2,30 +2,89 @@
 
 {% block content %}
 
-<h1>List</h1>
 
-<div class="col s12">
-  <table>
+
+<div class="col-md-12">
+  <h1>List</h1>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary pull-rigth" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="" action="{% url 'create' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label for="type">Type</label>
+                <select class="form-control" name="type">
+                  <option value="application/vnd.google-apps.document">Google Docs</option>
+                  <option value="application/vnd.google-apps.spreadsheet">Google Sheets</option>
+                  <option value="application/vnd.google-apps.folder">Folder</option>
+                </select>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="name">Name</label>
+                <input type="text" name="name" class="form-control" value="">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th></th>
         <th>Nombre</th>
-        <th>Tipo</th>
-        <th>Tamaño</th>
         <th>Usuario Modifica</th>
       </tr>
     </thead>
     <tbody>
       {% for f in files %}
       <tr>
-        <td><img src="{{ f['iconLink'] }}" alt="" style="width: 50%;"></td>
-        <td><a href="{{ f['downloadUrl'] }}"></a>{{ f['originalFilename'] }}</td>
-        <td>{{ f['fileExtension'] }}</td>
-        <td>{{ f['fileSize'] }}</td>
+        <td><img src="{{ f.iconLink }}" alt="" style="width: 70%;"></td>
+        {% if f.mimeType == "application/vnd.google-apps.folder" %}
+          <td><a href="#">{{ f.title }}</a></td>
+        {% else %}
+          {% if f.mimeType == "application/vnd.google-apps.document" %}
+            <td>
+              <a href="https://docs.google.com/document/d/{{f.id}}/edit" target="_blank">
+                {{ f.title }}
+              </a>
+            </td>
+          {% elif f.mimeType == "application/vnd.google-apps.spreadsheet" %}
+            <td>
+              <a href="https://docs.google.com/spreadsheets/d/{{f.id}}/edit" target="_blank">
+                {{ f.title }}
+              </a>
+            </td>
+          {% endif %}
+        {% endif %}
+        <td>{{ f.lastModifyingUserName }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
 
 {% endblock %}
